@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfahmi <mfahmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 17:51:37 by mfahmi            #+#    #+#             */
-/*   Updated: 2025/03/09 17:21:25 by mfahmi           ###   ########.fr       */
+/*   Updated: 2025/03/09 17:22:43 by mfahmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <unistd.h>
 
-volatile int	g_ack;
+volatile int	g_ack = 0;
 
 pid_t	ft_atoi(char *str)
 {
@@ -34,6 +34,8 @@ void	handler(int signum)
 {
 	if (signum == SIGUSR1)
 		g_ack = 1;
+	if (signum == SIGUSR2)
+		write(1, "The Message Sent\n", 17);
 }
 
 void	send_char(int nm, pid_t pid_server)
@@ -67,6 +69,7 @@ int	main(int ac, char **av)
 		sa.sa_flags = 0;
 		sigemptyset(&sa.sa_mask);
 		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
 		if (kill(pid_server, 0) == -1)
 		{
 			write(1, "The PID Is Not Valide\n", 22);
@@ -78,5 +81,6 @@ int	main(int ac, char **av)
 			send_char(av[2][i], pid_server);
 			i++;
 		}
+		send_char('\0', pid_server);
 	}
 }

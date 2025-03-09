@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfahmi <mfahmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 13:19:09 by mfahmi            #+#    #+#             */
-/*   Updated: 2025/03/09 17:21:19 by mfahmi           ###   ########.fr       */
+/*   Created: 2025/03/01 17:51:40 by mfahmi            #+#    #+#             */
+/*   Updated: 2025/03/09 17:56:58 by mfahmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ void	sig_handler(int signum, siginfo_t *info, void *nul)
 		c = (c << 1) | 0;
 	if (byte == 8)
 	{
-		write(1, &c, 1);
+		if (c == 0)
+			kill(pid, SIGUSR2);
+		else
+			write(1, &c, 1);
 		(1) && (byte = -1, c = 0);
 	}
 	byte++;
@@ -74,5 +77,4 @@ int	main(void)
 	putstr("\n");
 	while (1)
 		pause();
-	return (0);
 }
